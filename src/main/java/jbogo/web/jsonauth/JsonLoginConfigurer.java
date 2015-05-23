@@ -1,6 +1,5 @@
 package jbogo.web.jsonauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -12,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;import java.lang.Override;import java.lang.String;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /*
  * Copyright 2002-2013 the original author or authors.
@@ -86,7 +85,7 @@ public final class JsonLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
     protected RequestMatcher createLoginProcessingUrlMatcher(
         String loginProcessingUrl)
     {
-        return new AntPathRequestMatcher(loginProcessingUrl, "POST");
+        return new AntPathRequestMatcher(loginProcessingUrl, "PUT");
     }
 
     /**
@@ -113,12 +112,4 @@ public final class JsonLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         return super.loginPage(loginPage);
     }
 
-    public JsonLoginConfigurer<H> successResponseBodyProducer(JsonLoginSuccessResponseBodyProducer producer)
-    {
-        this.successHandler((req, resp, auth) -> {
-            resp.getWriter().write(new ObjectMapper().writeValueAsString(producer.produce(req, resp, auth)));
-            resp.addHeader("Content-Type", req.getHeader("Content-Type"));
-        });
-        return this;
-    }
 }

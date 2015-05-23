@@ -9,7 +9,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.Override;import java.lang.RuntimeException;import java.lang.String;import java.util.logging.Level;
+import java.lang.Override;import java.lang.RuntimeException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,9 +26,9 @@ public class JsonLoginCreateAuthenticationFilter extends UsernamePasswordAuthent
         }
 
         // JSON-Decode request body and retrieve LoginDto.
-        LoginCreateCmd loginCreateCmd;
+        JsonLoginCreateCmd jsonLoginCreateCmd;
         try {
-            loginCreateCmd = new ObjectMapper().readValue(request.getInputStream(), LoginCreateCmd.class);
+            jsonLoginCreateCmd = new ObjectMapper().readValue(request.getInputStream(), JsonLoginCreateCmd.class);
         } catch (IOException e) {
 //            e.printStackTrace();
             Logger.getLogger(JsonLoginCreateAuthenticationFilter.class.getName()).log(Level.SEVERE, null, e);
@@ -37,7 +38,7 @@ public class JsonLoginCreateAuthenticationFilter extends UsernamePasswordAuthent
 
         // The rest of the code is copied from the parent class
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-            loginCreateCmd.username, loginCreateCmd.password);
+            jsonLoginCreateCmd.username, jsonLoginCreateCmd.password);
 
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
@@ -45,10 +46,4 @@ public class JsonLoginCreateAuthenticationFilter extends UsernamePasswordAuthent
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 
-    static public class LoginCreateCmd
-    {
-        public String username;
-
-        public String password;
-    }
 }
